@@ -4,7 +4,8 @@ intfloor(x) = convert(Int,floor(x))
 "
     convertintrep(n::Int, base::Int)
 
-Converts the input `n` into its string representation with respect to `base`.
+Converts the input `n` ≧ 0 into its string representation with respect to
+`base`.
 "
 function convertintrep(n::Int, base::Int)
     result = ""
@@ -23,7 +24,7 @@ Converts the input 0 ≦ `n` < 1 into its string representation with respect to
 `base` for `precision` number of places.
 "
 function convertfracrep(n::Real, base::Int, precision)
-    result = ""
+    result = "."
     for _ in 1:precision
         n *= base
         result *= "$(alphabet[1 + intfloor(n)])"
@@ -41,9 +42,14 @@ Converts a real number `n` into its string representation with respect to
 `convertfracrep`.
 "
 function convertfloat(n::Real, base::Int, precision)
+    result = ""
+    if n < 0
+        result *= "-"
+        n *= -1
+    end
     intpart = intfloor(n)
     fracpart = n - floor(n)
-    convertintrep(intpart, base) * "." * convertfracrep(fracpart, base, precision)
+    result *= convertintrep(intpart, base) * convertfracrep(fracpart, base, precision)
 end
 
 int2dec(n::Int) = convertintrep(n, 10)
