@@ -1,16 +1,13 @@
 TOL = 0.5e-8
 
-function fixedpointiter(fun::Function, x₀::Real, ε = TOL, max_iter::Int = 100)
-    x = x₀
-    xprev = x
-    iter = 0
-    while iter < max_iter
-        iter += 1
-        x = fun(x)
-        if abs(x - xprev) / abs(x) < ε
-            break
-        end
-        xprev = x
+function fixedpointiter(fun::Function, x₀::Real; 
+                        ε = TOL, iₘₐₓ::int = 100)
+    i = 0
+    xᵢ = x₀
+    x₋ = 2xᵢ + 2 # not close to xᵢ and far greater than ε
+    while abs( xᵢ - x₋) / abs(xᵢ) >= ε && i < iₘₐₓ
+        x₋, xᵢ = xᵢ, fun(xᵢ)
+        i += 1
     end
-    x, iter
+    xᵢ, i
 end

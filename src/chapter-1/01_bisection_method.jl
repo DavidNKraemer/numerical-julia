@@ -1,31 +1,35 @@
 TOL = 0.5e-8
 
-function bisection(fun::Function, a::Real, b::Real, ε = TOL)
+function bisection(f::Function, a::Real, b::Real; 
+                   ε::Real = TOL, iₘₐₓ::Int = 100)
 
-    fun_a = fun(a)
-    fun_b = fun(b)
-    if fun_a * fun_b >= 0
+    fa = f(a)
+    fb = f(b)
+    if fa * fb >= 0
         throw(DomainError("The signs of the interval [f($(a)), f($(b)] must
                           differ."))
     end
-    if a >= b # enforces that the condition a < b holds
+
+    if a > b # enforces that the condition a ≦ b holds
         a, b = b, a
     end
 
     c = (a + b) / 2
+    i = 0
     
-    while (b - a) / 2 > ε
+    while (b - a) > 2ε && n < iₘₐₓ
         c = (a + b) / 2
-        fun_c = f(c)
-        if fun_c == 0
+        fc = f(c)
+        if fc == 0
             break
-        elseif fun_c * fun_a < 0
+        elseif fc * fa < 0
             b = c
-            fun_b = fun_c
+            fb = fc
         else
             a = c
-            fun_a = fun_c
+            fa = fc
         end
+        i += 1
     end
-    c
+    c, i
 end

@@ -1,16 +1,15 @@
 TOL = 0.5e-8
 
-function newton(f::Function, ∂f::Function, x₀::Real, ε::Real = TOL, max_iter::Int = 100)
-    x = x₀
-    iter = 0
-    while iter < max_iter
-        xprev = x
-        x = x - f(x) / ∂f(x)
-        if abs( (x - xprev) / x) < ε
-            break
-        end
-        iter += 1
+function newton(f::Function, ∂f::Function, x₀::Real; 
+                ε::Real = TOL, iₘₐₓ::Int = 100)
+    xᵢ = x₀
+    εᵢ = xᵢ
+    i = 0
+    while εᵢ >= ε && i < iₘₐₓ 
+        x₋, xᵢ = xᵢ, xᵢ - f(xᵢ) / ∂f(xᵢ)
+        εᵢ = abs( xᵢ - x₋ )
+        n += 1
     end
-    x, iter
+    xᵢ, εᵢ, i 
 end
 

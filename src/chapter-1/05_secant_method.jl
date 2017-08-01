@@ -1,16 +1,15 @@
 TOL = 0.5e-8
 
-function secant(f::Function, x₀::Real, x₁::Real, 
-                ε::Real = TOL, max_iter::Int = 100)
-    x₊, x₋ = x₁, x₀
-    iter = 0
-    while iter < max_iter
-        x₊, x₋ = x₊ - (f(x₊)*(x₊ - x₋))/(f(x₊) - f(x₋)), x₊
-        if abs((x₊ - x₋) / x₊) < ε
-            break
-        end
-        iter += 1
+function secant(f::Function, x₀::Real, x₁::Real; 
+                ε::Real = TOL, iₘₐₓ::Int = 100)
+    i = 0
+    xᵢ, x₋ = x₁, x₀
+    εᵢ = abs(xᵢ - x₋)
+    while εᵢ >= ε && i < iₘₐₓ
+        xᵢ, x₋ = xᵢ - (f(xᵢ) * (xᵢ - x₋))/ (f(xᵢ) - f(x₋)), xᵢ
+        εᵢ = abs(xᵢ - x₋)
+        i += 1
     end
-    x₊, iter
+    xᵢ, εᵢ, i 
 end
 
